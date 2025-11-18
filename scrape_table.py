@@ -3,12 +3,21 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 
 
 def main():
     options = Options()
     options.add_argument("--start-maximized")
-    driver = webdriver.Chrome(options=options)
+    # driver = webdriver.Chrome(options=options)
+
+    # 用 Service 指定 chromedriver 的路径
+    service = Service("/usr/local/bin/chromedriver")
+
+    driver = webdriver.Chrome(
+        service=service,
+        options=options
+    )
 
     try:
         url = "https://www.w3schools.com/html/html_tables.asp"
