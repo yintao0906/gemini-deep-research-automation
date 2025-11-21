@@ -8,17 +8,18 @@ import time
 
 
 def main():
-    # 1. 连接到“已经打开、已经登录”的 Chrome（调试端口 9222）
+    # 1. Connect to the already-opened and logged-in Chrome browser (debug port 9222).
+
     options = Options()
     options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
 
     driver = webdriver.Chrome(options=options)
 
     try:
-        # 2. 打开 Google Gemini 页面
+        # 2. Open the Google Gemini page.
         driver.get("https://gemini.google.com/app")
 
-        # 等待输入框出现
+        # Wait for the input box to appear.
         wait = WebDriverWait(driver, 30)
         input_box = wait.until(
             EC.presence_of_element_located(
@@ -26,16 +27,16 @@ def main():
             )
         )
 
-        # 3. 发送 prompt
+        # 3. Send the prompt
         prompt = "Write a 3-sentence summary about machine learning."
         input_box.send_keys(prompt)
         input_box.send_keys(Keys.ENTER)
         print("Prompt sent. Waiting for response...")
 
-        # 4. 等待 Gemini 生成回答
+        # 4. Wait for Gemini to produce the response.
         time.sleep(15)
 
-        # 5. 先尝试用 message-content 抓最新回答
+        # 5. First try to fetch the latest response using message-content.
         response_text = ""
 
         contents = driver.find_elements(By.CSS_SELECTOR, "message-content")
@@ -45,7 +46,7 @@ def main():
                 "return arguments[0].innerText;", latest
             ).strip()
         else:
-            # 如果没有 message-content，备用方案：抓所有 p[data-path-to-node]
+            # If there is no message-content, use the fallback method: capture all p[data-path-to-node] elements.
             print("No <message-content> found, fallback to <p[data-path-to-node]>.")
             paras = driver.find_elements(By.CSS_SELECTOR, "p[data-path-to-node]")
             parts = []
@@ -55,7 +56,7 @@ def main():
                     parts.append(txt)
             response_text = "\n".join(parts)
 
-        # 6. 保存到文本文件
+        # 6. Save to a text file.
         with open("gemini_output.txt", "w", encoding="utf-8") as f:
             f.write("PROMPT:\n")
             f.write(prompt + "\n\n")
@@ -65,7 +66,7 @@ def main():
         print("Output saved to gemini_output.txt")
 
     finally:
-        # 想自动关浏览器就改成 driver.quit()
+        # If you want to close the browser automatically, change it to driver.quit().
         # driver.quit()
         pass
 
