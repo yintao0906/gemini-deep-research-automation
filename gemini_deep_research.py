@@ -23,7 +23,6 @@ Full Deep Research automation for Google Gemini:
  12. Append the captured Gemini Thoughts as a “Gemini Thoughts” section
      at the end of the Markdown file.
 
-This script is written for demonstration / teaching purposes.
 """
 
 import re
